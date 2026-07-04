@@ -1,0 +1,25 @@
+name: Stock Analysis Bot
+
+on:
+  schedule:
+    - cron: '30 0 * * *' # 한국시간 09:30
+    - cron: '0 4 * * *'  # 한국시간 13:00
+    - cron: '0 7 * * *'  # 한국시간 16:00
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: pip install pandas requests
+      - name: Run analysis
+        env:
+          TOKEN: ${{ secrets.TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: python analyze_all.py
